@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import glob
 pattern_size=(9,6)#neibujiaodianshu
-square_size=25.0    #gezichangdu(mm) 
+square_size=22.5  #gezichangdu(mm) 
 objp=np.zeros((pattern_size[0]*pattern_size[1],3),np.float32)
 objp[:,:2]=np.mgrid[0:pattern_size[0],0:pattern_size[1]].T.reshape(-1,2)
 objp=objp*square_size

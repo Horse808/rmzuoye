@@ -11,13 +11,13 @@ def find_armor(image):
     light=[]
     for contour in contours:
         x,y,w,h=cv2.boundingRect(contour)
-        if h>w*1.5 and h>30 and w<50:
+        if h>w*1.5 :
             area=cv2.contourArea(contour)
             angle=cv2.minAreaRect(contour)[2]
             if w>h:
                 w,h=h,w
                 angle=90-angle
-            if area>100:
+            if area>0:
                 light.append((x,y,w,h,angle))
     armors=[]
     used=[False]*len(light)
@@ -36,7 +36,7 @@ def find_armor(image):
             else:
                 right,left=(x1,y1,w1,h1),(x2,y2,w2,h2)
             gap=right[0]-(left[0]+left[2])
-            if gap<20 or gap>150:
+            if gap>150:
                 continue
             if abs(a1-a2)>15:
                 continue
