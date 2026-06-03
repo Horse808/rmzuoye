@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10)
+project(ArmorDectetion)
+set(CMAKE_CXX_STANDARD 11)
+find_package(OpenCV REQUIRED)
+add_executable(zimiao main.cpp find_armor.cpp)
+target_link_libraries(zimiao ${OpenCV_LIBS})

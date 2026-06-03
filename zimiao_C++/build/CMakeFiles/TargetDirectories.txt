@@ -1,0 +1,3 @@
+/home/horse/桌面/rmzuoye/zimiao_C++/build/CMakeFiles/zimiao.dir
+/home/horse/桌面/rmzuoye/zimiao_C++/build/CMakeFiles/edit_cache.dir
+/home/horse/桌面/rmzuoye/zimiao_C++/build/CMakeFiles/rebuild_cache.dir
