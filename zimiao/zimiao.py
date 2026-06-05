@@ -41,8 +41,8 @@ def find_armor(image,camera_matrix,dist_coeffs):
                 if w>h:
                     w,h=h,w
                     angle=90-angle
-                if abs(angle)>80:
-                    continue
+                #if abs(angle)>80:
+                    #continue
                 lights.append((x,y,w,h,angle))
         return lights
     #lights_red=extract_lights(binary_red)
@@ -59,7 +59,7 @@ def find_armor(image,camera_matrix,dist_coeffs):
                 if used[j]:
                     continue
                 x2,y2,w2,h2,a2=lights[j]
-                if min(h1,h2)/max(h1,h2)<0.5:
+                if min(h1,h2)/max(h1,h2)<0.7:
                     continue
                 if x1<x2:
                     left=lights[i]
@@ -67,7 +67,7 @@ def find_armor(image,camera_matrix,dist_coeffs):
                 else:
                     right=lights[i]
                     left=lights[j]
-                gap_thresh=max(50,(left[3]+right[3]))
+                gap_thresh=max(40,(left[3]+right[3])*1.5)
                 gap=right[0]-(left[0]+left[2])
                 if gap>gap_thresh:
                     continue
@@ -95,7 +95,7 @@ def find_armor(image,camera_matrix,dist_coeffs):
     #armors_red=match_armors(lights_red,'red')
     #armors_blue=match_armors(lights_blue,'blue')
     armors=match_armors(lights)
-    return armors
+    return armors,lights
 CAM_TO_GIMBAL_TRANS=(0.05,0.0,0.08)
 CAM_TO_GIMBAL_ROT=(0.0,0.0,0.0)
 def compute_target_angles(target_cam):
@@ -163,11 +163,13 @@ def main():
         ret,frame=cap.read()
         if not ret:
             break
-        armors=find_armor(frame,CAMERA_MATRIX,DIST_COEFFS)
+        armors,lights=find_armor(frame,CAMERA_MATRIX,DIST_COEFFS)
+        for (x,y,w,h,_) in lights:
+            cv2.rectangle(frame,(x, y),(x+w,y+h),(255,0,0),2)
         for armor in armors:
             x,y,w,h=armor['bbox']
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-            cv2.circle(frame,armor['center'],4,(0,0,255),-1)
+            cv2.circle(frame,armor['center'],2,(0,0,255),-1)
             dist=armor['tvec'][2]
             cv2.putText(frame,f"{dist:.2f}m",(x,y-5),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),1)
         if armors:
@@ -182,8 +184,8 @@ def main():
                 current_target.tvec=best_match['tvec']
                 current_target.last_seen=time.time()
                 x,y,w,h=best_match['bbox']
-                cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),3)
-                cv2.circle(frame,best_match['center'],6,(255,0,0),-1)
+                cv2.rectangle(frame,(x,y),(x+w,y+h),(255,255,0),3)
+                cv2.circle(frame,best_match['center'],3,(255,255,0),-1)
             else:
                 target=min(armors,key=lambda a:a['tvec'][2])
                 target_cam=target['tvec']

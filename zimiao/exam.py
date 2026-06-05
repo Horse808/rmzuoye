@@ -41,7 +41,7 @@ def test_lights_detection(source):
                 if w > h:
                     w, h = h, w
                     angle = 90 - angle
-                if abs(angle) > 80: continue
+                #if abs(angle) > 80: continue
                 lights.append((x, y, w, h, angle))
         
         # 简单匹配装甲板
@@ -53,7 +53,7 @@ def test_lights_detection(source):
             for j in range(i+1, len(lights)):
                 if used[j]: continue
                 x2, y2, w2, h2, a2 = lights[j]
-                if min(h1, h2)/max(h1, h2) < 0.5: continue
+                if min(h1, h2)/max(h1, h2) < 0.7: continue
                 if x1 < x2:
                     left, right = lights[i], lights[j]
                     li, ri = i, j
@@ -61,7 +61,7 @@ def test_lights_detection(source):
                     left, right = lights[j], lights[i]
                     li, ri = j, i
                 gap = right[0] - (left[0] + left[2])
-                gap_thresh = max(80, (left[3] + right[3]) * 1.5)
+                gap_thresh = max(40, (left[3] + right[3]) * 1.5)
                 if gap > gap_thresh: continue
                 if abs(left[4] - right[4]) > 20: continue
                 # 匹配成功
@@ -100,7 +100,7 @@ def test_lights_detection(source):
             display = cv2.cvtColor(mask_blue, cv2.COLOR_GRAY2BGR)
         
         cv2.imshow("Lights Test", display)
-        key = cv2.waitKey(60) & 0xFF
+        key = cv2.waitKey(15) & 0xFF
         if key == ord('q'): break
         elif key == ord('1'): current_display = 1
         elif key == ord('2'): current_display = 2
