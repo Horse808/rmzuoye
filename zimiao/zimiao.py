@@ -155,6 +155,14 @@ def main():
     if not cap.isOpened():
         print("error")
         return 
+    width=int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height=int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps=cap.get(cv2.CAP_PROP_FPS)
+    if(fps<0 or fps>100):
+        fps=30.0
+    output_filename="output11.mp4"
+    fourcc=cv2.VideoWriter_fourcc(*'mp4v')
+    out=cv2.VideoWriter(output_filename,fourcc,fps,(width,height))
     kf=PredictiveKalman(dt=DT)
     print("start")
     current_target=None
@@ -204,10 +212,12 @@ def main():
         pitch_deg=np.degrees(pitch_pred)
         print(f"yaw:{yaw_deg:6.2f},pitch:{pitch_deg:6.2f}",end='',flush=True)
         cv2.imshow("Slefaim",frame)
+        out.write(frame);
         key=cv2.waitKey(30) & 0xFF
         if key==ord('q'):
             break
     cap.release()
+    out.release()
     cv2.destroyAllWindows()
 if __name__=="__main__":
     main()
